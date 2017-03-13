@@ -19,34 +19,37 @@ class RotatorPanel extends React.Component {
 
     reset() {
         setTimeout(() => {
+            this.setState({ currentSpin: 0 });
             this.scheduleRefresh();
         }, this.props.initialSpinTimeout * 1000);
     }
 
     scheduleRefresh() {
-        const SPIN_CYCLE = 4;
-        if (this.state.currentSpin < SPIN_CYCLE) {
-            setTimeout(() => {
-                const newCurrentSpin = this.state.currentSpin + 1;
+        setTimeout(() => {
+            const endOfCycle = this.isEndOfCycle();
+            const newCurrentSpin = endOfCycle ? 0 : this.state.currentSpin + 1;
+            if (endOfCycle && typeof (this.props.onCompleteSpinningCycle) != 'undefined') {
+                this.props.onCompleteSpinningCycle();
+            }
+            else {
                 this.setState({
                     currentSpin: newCurrentSpin
                 });
-
                 this.scheduleRefresh();
-            }, this.props.spinTimeout * 1000);
-        }
-        else {
-            this.setState({ currentSpin: 0 });
-            this.props.onCompleteSpinningCycle();
-        }
+            }
+        }, this.props.spinTimeout * 1000);
+    }
 
+    isEndOfCycle() {
+        const SPIN_CYCLE = 4;
+        return this.state.currentSpin === (SPIN_CYCLE - 1);
     }
 
     render() {
         if (!this.props.children) {
             return <div>Loading...</div>;
         }
-       
+
         // split children in groups of 4 items
         let groups = this.splitArrayInGroups(this.props.children);
 

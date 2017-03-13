@@ -13,7 +13,7 @@ class RotatorSegment extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (this.props.currentSpin != nextProps.currentSpin) {
             setTimeout(() => {
-                const newAngle = this.state.angle + 90;
+                const newAngle = this.state.angle - 90;
                 this.setState({
                     angle: newAngle
                 });
