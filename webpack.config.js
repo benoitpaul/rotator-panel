@@ -1,16 +1,29 @@
+var webpack = require('webpack');
 var path = require('path');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const VENDOR_LIBS = [
+    'axios',
+    'classnames',
+    'history',
+    'lodash',
+    'react',
+    'react-dom',
+    'react-redux',
+    'react-router',
+    'redux',
+    'redux-promise',
+    'redux-thunk'
+];
 
 var config = {
-    entry: './src/index.js',
-    /*
-    output: {
-        path: __dirname,
-        filename: './dist/bundle.js'
+    entry: {
+        bundle: './src/index.js',
+        vendor: VENDOR_LIBS
     },
-    */
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: '[name].[chunkhash].js'
     },
     devtool: 'source-map',
     module: {
@@ -65,6 +78,17 @@ var config = {
             },
         ]
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        }),
+        new webpack.optimize.CommonsChunkPlugin({
+            names: ['vendor', 'manifest']
+        }),
+        new HtmlWebpackPlugin({
+            template: 'src/index.html'
+        })
+    ]
 };
 
 module.exports = config;

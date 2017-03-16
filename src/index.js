@@ -22,7 +22,7 @@ const store = createStore(
   )
 );
 
-var destination = document.querySelector("#container");
+var destination = document.querySelector("#root");
 ReactDOM.render(
     <Provider store={store}>
         <Router history={browserHistory}>
