@@ -11,32 +11,32 @@ class RotatorPanel extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.children != nextProps.children) {
-            this.reset();
-        }
+    componentDidMount() {
+        this.reset();
     }
 
     reset() {
+        console.log(`reset - ${this.props.name}`);
         setTimeout(() => {
-            this.setState({ currentSpin: 0 });
             this.scheduleRefresh();
         }, this.props.initialSpinTimeout * 1000);
     }
 
     scheduleRefresh() {
+        console.log(`schedule refresh - ${this.props.name}`);
         setTimeout(() => {
             const endOfCycle = this.isEndOfCycle();
             const newCurrentSpin = endOfCycle ? 0 : this.state.currentSpin + 1;
             if (endOfCycle && typeof (this.props.onCompleteSpinningCycle) != 'undefined') {
                 this.props.onCompleteSpinningCycle();
             }
-            else {
+            // else {
+                console.log(`spin - ${this.props.name}: ${newCurrentSpin}`);
                 this.setState({
                     currentSpin: newCurrentSpin
                 });
                 this.scheduleRefresh();
-            }
+            //}
         }, this.props.spinTimeout * 1000);
     }
 
@@ -85,6 +85,7 @@ class RotatorPanel extends React.Component {
     }
 }
 RotatorPanel.propTypes = {
+    name: React.PropTypes.string,
     faceWidth: React.PropTypes.number.isRequired,
     faceHeight: React.PropTypes.number.isRequired,
     initialSpinTimeout: React.PropTypes.number,
